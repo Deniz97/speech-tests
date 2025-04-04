@@ -1,0 +1,37 @@
+{
+  "name": "Speech Recognition and Diarization Project",
+  "description": "A Python-based speech processing project focused on speaker diarization and verification using NVIDIA NeMo framework. Processes call center telephony data for speaker analysis.",
+  "repository_context": {
+    "tech_stack": {
+      "language": "Python 3.10",
+      "main_framework": "NVIDIA NeMo 2.0",
+      "purpose": "Speaker diarization and verification for call center audio"
+    },
+    "key_directories": {
+      "sesler": "Contains compressed WAV format audio files from call center recordings",
+      "diarization_outputs": {
+        "description": "Stores all diarization processing results",
+        "subdirectories": {
+          "speaker_outputs": "Speaker verification and identification results",
+          "vad_outputs": "Voice Activity Detection outputs",
+          "pred_rttms": "RTTM prediction files for speaker segments"
+        }
+      }
+    }
+  },
+  "cursor": {
+    "defaultLLM": "claude3-sonnet",
+    "rules": [
+      {
+        "description": "Audio processing context",
+        "pattern": "**/*.py",
+        "context": "This is a speech processing project using NeMo for speaker diarization. Input audio files are telephony data in WAV format."
+      },
+      {
+        "description": "Diarization outputs",
+        "pattern": "diarization_outputs/**/*",
+        "context": "This directory contains speaker diarization results including VAD outputs, speaker verification results, and RTTM predictions."
+      }
+    ]
+  }
+} 

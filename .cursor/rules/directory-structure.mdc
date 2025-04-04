@@ -1,0 +1,41 @@
+---
+description: File structure and finding files in the repo
+globs: 
+alwaysApply: false
+---
+# Directory Structure Guidelines
+
+type: auto_attached
+patterns: ["**/*"]
+
+## Directory Organization
+The project follows a specific directory structure for organizing audio processing and results:
+
+### Input Audio
+- `/sesler/`: Contains compressed WAV format audio files from call center recordings
+  - All audio files should be in WAV format
+  - Telephony-specific audio characteristics
+
+### Processing Outputs
+- `/diarization_outputs/`: Main output directory
+  - `speaker_outputs/`: Speaker verification and identification results
+  - `vad_outputs/`: Voice Activity Detection outputs
+  - `pred_rttms/`: RTTM prediction files for speaker segments
+
+## File Naming Conventions
+- Audio files: `{call_id}_compressed.wav`
+- RTTM files: `{call_id}.rttm`
+- VAD outputs: `{call_id}_vad.json`
+- Speaker outputs: `{call_id}_speaker.json`
+
+## Best Practices
+- Keep input audio files in `/sesler`
+- Maintain clear separation between input and output directories
+- Follow consistent naming patterns for all files
+- Use appropriate subdirectories for different output types
+
+## Verification Steps
+1. Check file placement in correct directories
+2. Verify file naming conventions
+3. Validate output file structure
+4. Ensure proper file format usage 

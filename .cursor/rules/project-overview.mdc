@@ -1,0 +1,39 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Speech Recognition and Diarization Project Overview
+
+type: always
+
+## Project Context
+This is a Python-based speech processing project that focuses on speaker diarization and verification using the NVIDIA NeMo framework. The project processes call center telephony data for speaker analysis.
+
+## Technical Stack
+- Language: Python 3.10
+- Main Framework: NVIDIA NeMo 2.0
+- Purpose: Speaker diarization and verification for call center audio
+
+## Essential Patterns
+- Use NeMo's speaker diarization models for audio processing
+- Follow Python 3.10 syntax and features
+- Implement proper error handling for audio processing tasks
+
+## Deprecated Patterns
+- Avoid using older NeMo 1.x APIs
+- Don't use raw audio processing without VAD
+- Avoid synchronous processing for large audio files
+
+## Examples
+```python
+# Recommended pattern for NeMo initialization
+import nemo.collections.asr as nemo_asr
+speaker_model = nemo_asr.models.EncDecSpeakerLabelModel.from_pretrained("nvidia/speakerverification_en_titanet_large")
+```
+
+## Verification Steps
+1. Ensure NeMo 2.0 compatibility
+2. Verify Python 3.10 syntax
+3. Check for proper error handling
+4. Validate audio processing pipeline 

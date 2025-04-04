@@ -1,0 +1,49 @@
+---
+description: Audio processing methods and logic
+globs: 
+alwaysApply: false
+---
+# Audio Processing Guidelines
+
+type: auto_attached
+patterns: ["**/*.py"]
+
+## Audio Processing Context
+This project handles call center audio data using NeMo's speaker diarization capabilities:
+
+### Core Components
+- Voice Activity Detection (VAD)
+- Speaker Diarization
+- Speaker Verification
+
+## Implementation Guidelines
+### VAD Processing
+```python
+# Recommended VAD implementation
+from nemo.collections.asr import models
+vad_model = models.EncDecClassificationModel.from_pretrained('vad_telephony')
+```
+
+### Diarization
+```python
+# Proper diarization setup
+from nemo.collections.asr import models
+diarizer = models.EncDecDiarizer.from_pretrained('diar_telephony')
+```
+
+## Best Practices
+- Always perform VAD before diarization
+- Use appropriate sampling rates for telephony audio (8kHz/16kHz)
+- Implement proper error handling for audio processing
+- Cache intermediate results when processing large files
+
+## Anti-patterns
+- Avoid processing raw audio without VAD
+- Don't skip audio format validation
+- Never process entire audio in memory for long files
+
+## Verification Steps
+1. Validate audio format and sampling rate
+2. Confirm VAD processing
+3. Verify diarization output format
+4. Check speaker verification accuracy 
