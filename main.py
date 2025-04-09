@@ -16,6 +16,7 @@ class VerificationResult:
     verified: bool
     similarity: float
     segment_index: int
+    source_segment_index: int
 
 @dataclass
 class FileTestResults:
@@ -201,7 +202,8 @@ def process_audio_file(file_path: str, model, embeddings_db: Dict, all_wav_files
             positive_results.append(VerificationResult(
                 verified=verified,
                 similarity=similarity,
-                segment_index=orig_index
+                segment_index=orig_index,
+                source_segment_index=registration_index
             ))
         
         # Get random segments from other files for negative testing
@@ -219,7 +221,8 @@ def process_audio_file(file_path: str, model, embeddings_db: Dict, all_wav_files
                 VerificationResult(
                     verified=verified,
                     similarity=similarity,
-                    segment_index=i
+                    segment_index=i,
+                    source_segment_index=registration_index
                 )
             ))
         
@@ -394,7 +397,8 @@ def print_results(results: Dict[str, FileTestResults], summary: TestSummary):
                 print(f"    Segment {pr.segment_index + 1}: "
                       f"{'✓' if pr.verified else '✗'} "
                       f"(similarity: {pr.similarity:.3f})"
-                      f"(segment index: {pr.segment_index})")
+                      f"(segment index: {pr.segment_index})"
+                      f"(source segment index: {pr.source_segment_index})")
             
             # Negative results
             neg_success = sum(1 for _, nr in result.negative_results if not nr.verified)
@@ -403,7 +407,8 @@ def print_results(results: Dict[str, FileTestResults], summary: TestSummary):
                 print(f"    vs {source_file}: "
                       f"{'✗' if not nr.verified else '✓'} "
                       f"(similarity: {nr.similarity:.3f})"
-                      f"(segment index: {nr.segment_index})")
+                      f"(segment index: {nr.segment_index})"
+                      f"(source segment index: {nr.source_segment_index})")
     
     print("\nSummary:")
     print("========")
