@@ -129,7 +129,6 @@ def register_user(user_id: str, audio_segments: List[np.ndarray], embeddings_db:
     
     # Store all embeddings for the user
     embeddings_db[user_id] = embeddings
-    print(f"User {user_id} registered successfully with {len(embeddings)} segments.")
 
 def verify_user(user_id: str, audio_data: np.ndarray, embeddings_db: Dict, model,
                 threshold: float = 0.7) -> Tuple[bool, float]:
