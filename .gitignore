@@ -1,5 +1,6 @@
 .DS_Store
 venv/
+.venv/
 sesler/
 sesler2/
 converted_wavs/
