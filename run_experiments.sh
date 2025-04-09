@@ -2,7 +2,7 @@
 
 # Define ranges for parameters
 SEGMENT_LENGTHS=(1.0 2.0 4.0 8.0 16.0 32.0)
-THRESHOLDS=(0.5 0.6 0.7 0.8 0.9)
+THRESHOLDS=(0.6)
 NEGATIVE_SAMPLES=20
 
 # Create a results directory
