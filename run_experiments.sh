@@ -3,7 +3,7 @@
 # Define ranges for parameters
 SEGMENT_LENGTHS=(1.0 2.0 4.0 8.0 16.0 32.0)
 THRESHOLDS=(0.6)
-NEGATIVE_SAMPLES=20
+NEGATIVE_SAMPLES=10
 
 # Create a results directory
 RESULTS_DIR="experiment_results"
