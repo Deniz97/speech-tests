@@ -34,7 +34,7 @@ for seg_len in "${SEGMENT_LENGTHS[@]}"; do
         LOG_FILE="$RESULTS_DIR/segment${seg_len}_threshold${threshold}.log"
         
         # Run the main.py script with these parameters
-        python main.py --segment-length $seg_len --threshold $threshold --negative-samples $NEGATIVE_SAMPLES | tee $LOG_FILE
+        python main.py --segment-length $seg_len --threshold $threshold --negative-samples $NEGATIVE_SAMPLES --customer-only --max-files 100 | tee $LOG_FILE
         
         # Extract key metrics for the summary
         POS_SUCCESS=$(grep "Positive Tests" -A 3 $LOG_FILE | grep "Success rate" | awk '{print $4}')
@@ -43,6 +43,7 @@ for seg_len in "${SEGMENT_LENGTHS[@]}"; do
         
         # Add to summary
         echo "Segment Length: $seg_len, Threshold: $threshold" >> $SUMMARY_LOG
+        echo "Timestamp: $(date +"%Y-%m-%d %H:%M:%S")" >> $SUMMARY_LOG
         echo "  - Too short files: $TOO_SHORT" >> $SUMMARY_LOG
         echo "  - Positive test success rate: $POS_SUCCESS" >> $SUMMARY_LOG
         echo "  - Negative test success rate: $NEG_SUCCESS" >> $SUMMARY_LOG

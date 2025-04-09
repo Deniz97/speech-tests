@@ -2,7 +2,7 @@ deps:
 	pip install -r requirements.txt
 
 dev:
-	python main.py --segment-length 10.0 --negative-samples 10 --threshold 0.60
+	python main.py --segment-length 10.0 --negative-samples 10 --threshold 0.60 --customer-only --max-files 10
 
 experiment:
 	mkdir -p experiment_results_$(shell date +%Y%m%d_%H%M%S)
@@ -28,6 +28,9 @@ source:
 
 get_output:
 	scp -P 61705 -i ./id_rsa root@$(ip):/root/speech-tests/output.txt .
+
+get_summary:
+	scp -P 61705 -i ./id_rsa root@$(ip):/root/speech-tests/experiment_results/summary.txt .
 
 unzip:
 	apt update

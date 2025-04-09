@@ -1,0 +1,11 @@
+Experiment Summary
+=================
+Date: Wed Apr  9 19:03:30 UTC 2025
+
+Parameters tested:
+Segment Lengths: 1.0 2.0 4.0 8.0 16.0 32.0
+Thresholds: 0.6
+Negative Samples: 20
+
+Results:
+-------

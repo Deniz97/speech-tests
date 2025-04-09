@@ -485,6 +485,10 @@ if __name__ == "__main__":
                       help='Directory containing operator audio segments')
     parser.add_argument('--threshold', type=float, default=0.7,
                       help='Similarity threshold for verification (default: 0.7)')
+    parser.add_argument('--max-files', type=int, default=None,
+                      help='Maximum number of files to process (default: all)')
+    parser.add_argument('--customer-only', action='store_true',
+                      help='Process only customer files (default: false)')
     
     args = parser.parse_args()
     
@@ -502,16 +506,28 @@ if __name__ == "__main__":
     # Initialize a dictionary to store user embeddings
     embeddings_db = {}
 
-    # Get files from both directories
+    # Get files from directories
     customer_dir = args.customer_dir
     operator_dir = args.operator_dir
     
-    # Collect all WAV files from both directories with their full paths
+    # Collect WAV files
     wav_files = []
-    for directory in [customer_dir, operator_dir]:
-        if os.path.exists(directory):
-            files = [f for f in os.listdir(directory) if f.endswith('.WAV') or f.endswith('.wav')]
-            wav_files.extend([(f, os.path.join(directory, f)) for f in files])
+    
+    # Always process customer files
+    if os.path.exists(customer_dir):
+        customer_files = [(f, os.path.join(customer_dir, f)) for f in os.listdir(customer_dir) 
+                         if f.endswith('.WAV') or f.endswith('.wav')]
+        wav_files.extend(customer_files)
+    
+    # Only add operator files if not in customer-only mode
+    if not args.customer_only and os.path.exists(operator_dir):
+        operator_files = [(f, os.path.join(operator_dir, f)) for f in os.listdir(operator_dir) 
+                         if f.endswith('.WAV') or f.endswith('.wav')]
+        wav_files.extend(operator_files)
+    
+    # Limit the number of files if max-files is specified
+    if args.max_files is not None:
+        wav_files = wav_files[:args.max_files]
     
     print(f"\nFound {len(wav_files)} WAV files to process.")
     
