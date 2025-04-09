@@ -2,7 +2,13 @@ deps:
 	pip install -r requirements.txt
 
 dev:
-	python main.py
+	python main.py --segment-length 10.0 --negative-samples 10 --threshold 0.60
+
+experiment:
+	mkdir -p experiment_results_$(shell date +%Y%m%d_%H%M%S)
+	cp -r experiment_results/* experiment_results_$(shell date +%Y%m%d_%H%M%S)/ 2>/dev/null || true
+	rm -rf experiment_results
+	./run_experiments.sh
 
 create-env:
 	python3.10 -m venv .venv
@@ -19,6 +25,9 @@ scp:
 
 source:
 	source .venv/bin/activate
+
+get_output:
+	scp -P 61705 -i ./id_rsa root@$(ip):/root/speech-tests/output.txt .
 
 unzip:
 	apt update

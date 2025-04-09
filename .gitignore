@@ -9,3 +9,6 @@ speaker_segments/
 sesler2.zip
 id_rsa
 id_rsa.pub
+output.txt
+experiment_results/
+experiment_results_*/
