@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Define ranges for parameters
-SEGMENT_LENGTHS=(1.0 2.0 4.0 8.0 16.0 32.0)
+SEGMENT_LENGTHS=(32.0 16.0 8.0 4.0 2.0 1.0)
 THRESHOLDS=(0.6)
 NEGATIVE_SAMPLES=10
 
