@@ -7,3 +7,5 @@ diarization_outputs/
 error.log
 speaker_segments/
 sesler2.zip
+id_rsa
+id_rsa.pub

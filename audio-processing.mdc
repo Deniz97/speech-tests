@@ -1,0 +1,92 @@
+# Audio Processing Guidelines
+
+type: auto_attached
+patterns: ["**/*.py"]
+
+## Core Components
+- Speaker Verification using NVIDIA NeMo
+- Audio Segmentation
+- Cross-validation Testing
+- Similarity Scoring
+
+## Implementation Guidelines
+
+### Speaker Model Initialization
+```python
+import nemo.collections.asr as nemo_asr
+model = nemo_asr.models.EncDecSpeakerLabelModel.from_pretrained("nvidia/speakerverification_en_titanet_large")
+model.eval()  # Always set to evaluation mode
+```
+
+### Audio Processing Parameters
+- Sampling Rate: 16kHz (fixed)
+- Segment Length: Configurable (default 5.0 seconds)
+- Negative Samples: Configurable (default 3 samples)
+- Similarity Threshold: 0.7 (for verification)
+
+### Data Structures
+```python
+@dataclass
+class VerificationResult:
+    verified: bool
+    similarity: float
+    segment_index: int
+
+@dataclass
+class FileTestResults:
+    file_name: str
+    source_type: str  # "Customer" or "Operator"
+    num_registration_segments: int
+    positive_results: List[VerificationResult]
+    negative_results: List[Tuple[str, VerificationResult]]
+    error: Optional[str] = None
+```
+
+## Best Practices
+1. Audio Processing:
+   - Split audio into fixed-length segments
+   - Use half segments for registration, half for testing
+   - Get negative samples from different files
+   - Process segments independently to avoid memory issues
+
+2. Verification:
+   - Compare against all registered segments
+   - Use cosine similarity for comparison
+   - Track both positive and negative test results
+   - Store source file information for negative tests
+
+3. Error Handling:
+   - Validate audio file length
+   - Check for minimum required segments
+   - Handle file loading errors gracefully
+   - Track and report processing failures
+
+## Anti-patterns
+- Don't process entire audio files at once
+- Avoid using same file for negative samples
+- Don't skip error handling for audio loading
+- Never assume file existence without checking
+
+## Verification Steps
+1. Validate audio format and length
+2. Confirm successful segmentation
+3. Verify speaker registration
+4. Test against positive samples
+5. Test against negative samples from different files
+6. Calculate and report similarity scores
+
+## Example Usage
+```python
+# Configuration
+SEGMENT_LENGTH_SEC = 5.0  # N seconds
+NUM_NEGATIVE_SAMPLES = 3  # M samples
+
+# Process audio file
+results = process_audio_file(
+    file_path=audio_path,
+    model=speaker_model,
+    embeddings_db=db,
+    all_wav_files=files,
+    segment_length_sec=SEGMENT_LENGTH_SEC,
+    num_negative_samples=NUM_NEGATIVE_SAMPLES
+) 
