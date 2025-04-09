@@ -1,11 +1,47 @@
 Experiment Summary
 =================
-Date: Wed Apr  9 19:03:30 UTC 2025
+Date: Wed Apr  9 19:16:04 UTC 2025
 
 Parameters tested:
-Segment Lengths: 1.0 2.0 4.0 8.0 16.0 32.0
+Segment Lengths: 32.0 16.0 8.0 4.0 2.0 1.0
 Thresholds: 0.6
-Negative Samples: 20
+Negative Samples: 10
 
 Results:
 -------
+Segment Length: 32.0, Threshold: 0.6
+Timestamp: 2025-04-09 19:16:17
+  - Too short files: 94
+  - Positive test success rate: 100.0%
+  - Negative test success rate: 95.0%
+
+Segment Length: 16.0, Threshold: 0.6
+Timestamp: 2025-04-09 19:16:34
+  - Too short files: 73
+  - Positive test success rate: 98.0%
+  - Negative test success rate: 98.9%
+
+Segment Length: 8.0, Threshold: 0.6
+Timestamp: 2025-04-09 19:16:56
+  - Too short files: 37
+  - Positive test success rate: 96.9%
+  - Negative test success rate: 98.7%
+
+Segment Length: 4.0, Threshold: 0.6
+Timestamp: 2025-04-09 19:17:22
+  - Too short files: 6
+  - Positive test success rate: 58.6%
+  - Negative test success rate: 99.9%
+
+Segment Length: 2.0, Threshold: 0.6
+Timestamp: 2025-04-09 19:17:47
+  - Too short files: 2
+  - Positive test success rate: 9.4%
+  - Negative test success rate: 100.0%
+
+Segment Length: 1.0, Threshold: 0.6
+Timestamp: 2025-04-09 19:18:19
+  - Too short files: 2
+  - Positive test success rate: 0.3%
+  - Negative test success rate: 100.0%
+

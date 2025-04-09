@@ -42,6 +42,8 @@ class TestSummary:
     successful_negative_tests: int
     avg_positive_similarity: float
     avg_negative_similarity: float
+    files_with_positive_failures: int  # Files with at least one positive test failure
+    files_with_negative_failures: int  # Files with at least one negative test failure
     results_by_source: Dict[str, Dict[str, int]]  # source_type -> metrics
 
 # Load a pretrained speaker verification model (ECAPA-TDNN) from NeMo
@@ -282,16 +284,30 @@ def calculate_summary(results: Dict[str, FileTestResults]) -> TestSummary:
     successful_negative_tests = 0
     all_negative_similarities = []
     
+    # Track files with failures
+    files_with_positive_failures = 0
+    files_with_negative_failures = 0
+    
     for result in valid_results:
         # Positive tests (should verify successfully)
         total_positive_tests += len(result.positive_results)
-        successful_positive_tests += sum(1 for pr in result.positive_results if pr.verified)
+        successful_positive_in_file = sum(1 for pr in result.positive_results if pr.verified)
+        successful_positive_tests += successful_positive_in_file
         all_positive_similarities.extend(pr.similarity for pr in result.positive_results)
+        
+        # Check if this file has any positive test failures
+        if successful_positive_in_file < len(result.positive_results):
+            files_with_positive_failures += 1
         
         # Negative tests (should NOT verify successfully)
         total_negative_tests += len(result.negative_results)
-        successful_negative_tests += sum(1 for _, nr in result.negative_results if not nr.verified)
+        successful_negative_in_file = sum(1 for _, nr in result.negative_results if not nr.verified)
+        successful_negative_tests += successful_negative_in_file
         all_negative_similarities.extend(nr.similarity for _, nr in result.negative_results)
+        
+        # Check if this file has any negative test failures
+        if successful_negative_in_file < len(result.negative_results):
+            files_with_negative_failures += 1
     
     # Calculate average similarities
     avg_positive_similarity = (
@@ -312,7 +328,9 @@ def calculate_summary(results: Dict[str, FileTestResults]) -> TestSummary:
         'positive_tests_total': 0,
         'positive_tests_passed': 0,
         'negative_tests_total': 0,
-        'negative_tests_passed': 0
+        'negative_tests_passed': 0,
+        'files_with_positive_failures': 0,
+        'files_with_negative_failures': 0
     })
     
     for result in results.values():
@@ -322,9 +340,19 @@ def calculate_summary(results: Dict[str, FileTestResults]) -> TestSummary:
         if result.error is None:
             stats['successful'] += 1
             stats['positive_tests_total'] += len(result.positive_results)
-            stats['positive_tests_passed'] += sum(1 for pr in result.positive_results if pr.verified)
+            pos_passed = sum(1 for pr in result.positive_results if pr.verified)
+            stats['positive_tests_passed'] += pos_passed
             stats['negative_tests_total'] += len(result.negative_results)
-            stats['negative_tests_passed'] += sum(1 for _, nr in result.negative_results if not nr.verified)
+            neg_passed = sum(1 for _, nr in result.negative_results if not nr.verified)
+            stats['negative_tests_passed'] += neg_passed
+            
+            # Track files with failures by source type
+            if pos_passed < len(result.positive_results):
+                stats['files_with_positive_failures'] += 1
+                
+            if neg_passed < len(result.negative_results):
+                stats['files_with_negative_failures'] += 1
+                
         elif result.is_too_short:
             stats['too_short'] += 1
         else:
@@ -340,6 +368,8 @@ def calculate_summary(results: Dict[str, FileTestResults]) -> TestSummary:
         successful_negative_tests=successful_negative_tests,
         avg_positive_similarity=avg_positive_similarity,
         avg_negative_similarity=avg_negative_similarity,
+        files_with_positive_failures=files_with_positive_failures,
+        files_with_negative_failures=files_with_negative_failures,
         results_by_source=dict(results_by_source)
     )
 
@@ -446,6 +476,9 @@ def print_results(results: Dict[str, FileTestResults], summary: TestSummary):
         print(f"  - Successful matches: {summary.successful_positive_tests}")
         print(f"  - Success rate: {pos_success_rate:.1f}%")
         print(f"  - Average similarity: {summary.avg_positive_similarity:.3f}")
+        print(f"  - Files with at least one positive failure: {summary.files_with_positive_failures}")
+        if summary.successful_files > 0:
+            print(f"  - Percentage of files with positive failures: {(summary.files_with_positive_failures/summary.successful_files)*100:.1f}%")
     
     if summary.total_negative_tests > 0:
         neg_success_rate = (summary.successful_negative_tests/summary.total_negative_tests)*100
@@ -454,6 +487,9 @@ def print_results(results: Dict[str, FileTestResults], summary: TestSummary):
         print(f"  - Successful non-matches: {summary.successful_negative_tests}")
         print(f"  - Success rate: {neg_success_rate:.1f}%")
         print(f"  - Average similarity: {summary.avg_negative_similarity:.3f}")
+        print(f"  - Files with at least one negative failure: {summary.files_with_negative_failures}")
+        if summary.successful_files > 0:
+            print(f"  - Percentage of files with negative failures: {(summary.files_with_negative_failures/summary.successful_files)*100:.1f}%")
     
     print("\nResults by source type:")
     for source_type, stats in summary.results_by_source.items():
@@ -466,10 +502,12 @@ def print_results(results: Dict[str, FileTestResults], summary: TestSummary):
         if stats['positive_tests_total'] > 0:
             pos_rate = (stats['positive_tests_passed'] / stats['positive_tests_total']) * 100
             print(f"  - Positive test success rate: {pos_rate:.1f}%")
+            print(f"  - Files with positive failures: {stats['files_with_positive_failures']}")
         
         if stats['negative_tests_total'] > 0:
             neg_rate = (stats['negative_tests_passed'] / stats['negative_tests_total']) * 100
             print(f"  - Negative test success rate: {neg_rate:.1f}%")
+            print(f"  - Files with negative failures: {stats['files_with_negative_failures']}")
 
 # Example of using the system
 if __name__ == "__main__":
@@ -489,6 +527,8 @@ if __name__ == "__main__":
                       help='Maximum number of files to process (default: all)')
     parser.add_argument('--customer-only', action='store_true',
                       help='Process only customer files (default: false)')
+    parser.add_argument('--sort-by-length', action='store_true', default=True,
+                      help='Sort files by length before processing (default: true)')
     
     args = parser.parse_args()
     
@@ -524,13 +564,45 @@ if __name__ == "__main__":
         operator_files = [(f, os.path.join(operator_dir, f)) for f in os.listdir(operator_dir) 
                          if f.endswith('.WAV') or f.endswith('.wav')]
         wav_files.extend(operator_files)
+
     
-    # Limit the number of files if max-files is specified
-    if args.max_files is not None:
-        wav_files = wav_files[:args.max_files]
+    # Sort files by duration if requested
+    if args.sort_by_length:
+        print("Sorting files by duration...")
+        
+        # Helper function to get file duration
+        def get_file_duration(filepath):
+            try:
+                audio, sr = librosa.load(filepath, sr=16000)
+                return len(audio) / sr
+            except Exception as e:
+                print(f"Warning: Could not determine duration for {filepath}: {str(e)}")
+                return 0
+        
+        # Get durations for all files
+        wav_files_with_duration = []
+        for filename, filepath in wav_files:
+            duration = get_file_duration(filepath)
+            wav_files_with_duration.append((filename, filepath, duration))
+        
+        # Sort by duration (longest first)
+        wav_files_with_duration.sort(key=lambda x: x[2], reverse=True)
+        
+        # Print sorted file information
+        print("\nFiles sorted by duration (longest first):")
+        for i, (filename, _, duration) in enumerate(wav_files_with_duration[:10], 1):
+            print(f"{i}. {filename}: {duration:.1f}s")
+        if len(wav_files_with_duration) > 10:
+            print(f"... and {len(wav_files_with_duration) - 10} more files")
+        
+        # Update wav_files without the duration information
+        wav_files = [(filename, filepath) for filename, filepath, _ in wav_files_with_duration]
     
     print(f"\nFound {len(wav_files)} WAV files to process.")
-    
+      # Limit the number of files if max-files is specified
+    if args.max_files is not None:
+        wav_files = wav_files[:args.max_files]
+    print(f"\nSelected and processing {len(wav_files)} files.")
     results = {}
     # Pass the list of all filenames for random selection
     all_filenames = [f[0] for f in wav_files]
