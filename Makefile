@@ -32,6 +32,10 @@ get_output:
 get_summary:
 	scp -P 61705 -i ./id_rsa root@$(ip):/root/speech-tests/experiment_results/summary.txt .
 
+get_experiment_results:
+	mkdir -p ./server/experiment_results
+	scp -P 61705 -i ./id_rsa root@$(ip):/root/speech-tests/experiment_results/* ./server/experiment_results/
+
 unzip:
 	apt update
 	apt install -y unzip

@@ -1,6 +1,6 @@
 Experiment Summary
 =================
-Date: Wed Apr  9 19:16:04 UTC 2025
+Date: Wed Apr  9 19:40:51 UTC 2025
 
 Parameters tested:
 Segment Lengths: 32.0 16.0 8.0 4.0 2.0 1.0
@@ -10,38 +10,46 @@ Negative Samples: 10
 Results:
 -------
 Segment Length: 32.0, Threshold: 0.6
-Timestamp: 2025-04-09 19:16:17
-  - Too short files: 94
-  - Positive test success rate: 100.0%
-  - Negative test success rate: 95.0%
+Timestamp: 2025-04-09 19:42:04
+  - Total files processed: 100
+  - Successful files: 96
+  - Too short files: 4
+  - Other failed files: 0
+0
+
+  Positive Tests:
+  - Total tests: 170
+  - Successful matches: 169
+  - Success rate: 99.4%
+  - Average similarity: 0.927
+  - Files with positive failures: 1
+
+  Negative Tests:
+  - Total tests: 960
+  - Successful non-matches: 923
+  - Success rate: 96.1%
+  - Average similarity: 0.387
+  - Files with negative failures: 27
 
 Segment Length: 16.0, Threshold: 0.6
-Timestamp: 2025-04-09 19:16:34
-  - Too short files: 73
-  - Positive test success rate: 98.0%
-  - Negative test success rate: 98.9%
+Timestamp: 2025-04-09 19:42:59
+  - Total files processed: 100
+  - Successful files: 100
+  - Too short files: 0
+  - Other failed files: 0
+0
 
-Segment Length: 8.0, Threshold: 0.6
-Timestamp: 2025-04-09 19:16:56
-  - Too short files: 37
-  - Positive test success rate: 96.9%
-  - Negative test success rate: 98.7%
+  Positive Tests:
+  - Total tests: 479
+  - Successful matches: 471
+  - Success rate: 98.3%
+  - Average similarity: 0.884
+  - Files with positive failures: 4
 
-Segment Length: 4.0, Threshold: 0.6
-Timestamp: 2025-04-09 19:17:22
-  - Too short files: 6
-  - Positive test success rate: 58.6%
-  - Negative test success rate: 99.9%
-
-Segment Length: 2.0, Threshold: 0.6
-Timestamp: 2025-04-09 19:17:47
-  - Too short files: 2
-  - Positive test success rate: 9.4%
-  - Negative test success rate: 100.0%
-
-Segment Length: 1.0, Threshold: 0.6
-Timestamp: 2025-04-09 19:18:19
-  - Too short files: 2
-  - Positive test success rate: 0.3%
-  - Negative test success rate: 100.0%
+  Negative Tests:
+  - Total tests: 1000
+  - Successful non-matches: 971
+  - Success rate: 97.1%
+  - Average similarity: 0.378
+  - Files with negative failures: 21
 

@@ -4,6 +4,8 @@
 SEGMENT_LENGTHS=(32.0 16.0 8.0 4.0 2.0 1.0)
 THRESHOLDS=(0.6)
 NEGATIVE_SAMPLES=10
+CUSTOMER_ONLY=True
+MAX_FILES=400
 
 # Create a results directory
 RESULTS_DIR="experiment_results"
@@ -16,6 +18,8 @@ echo "=================" >> $SUMMARY_LOG
 echo "Date: $(date)" >> $SUMMARY_LOG
 echo "" >> $SUMMARY_LOG
 echo "Parameters tested:" >> $SUMMARY_LOG
+echo "Customer only: $CUSTOMER_ONLY" >> $SUMMARY_LOG
+echo "Max files: $MAX_FILES" >> $SUMMARY_LOG
 echo "Segment Lengths: ${SEGMENT_LENGTHS[*]}" >> $SUMMARY_LOG
 echo "Thresholds: ${THRESHOLDS[*]}" >> $SUMMARY_LOG
 echo "Negative Samples: $NEGATIVE_SAMPLES" >> $SUMMARY_LOG
@@ -38,7 +42,7 @@ for seg_len in "${SEGMENT_LENGTHS[@]}"; do
         LOG_FILE="$RESULTS_DIR/segment${seg_len}_threshold${threshold}.log"
         
         # Run the main.py script with these parameters
-        python main.py --segment-length $seg_len --threshold $threshold --negative-samples $NEGATIVE_SAMPLES --customer-only --max-files 100 | tee $LOG_FILE
+        python main.py --segment-length $seg_len --threshold $threshold --negative-samples $NEGATIVE_SAMPLES --customer-only $CUSTOMER_ONLY --max-files $MAX_FILES | tee $LOG_FILE
         
         # Extract key metrics for the summary
         TOTAL_FILES=$(grep "Total files processed:" $LOG_FILE | awk '{print $4}')
