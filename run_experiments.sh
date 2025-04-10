@@ -42,7 +42,7 @@ for seg_len in "${SEGMENT_LENGTHS[@]}"; do
         LOG_FILE="$RESULTS_DIR/segment${seg_len}_threshold${threshold}.log"
         
         # Run the main.py script with these parameters
-        python main.py --segment-length $seg_len --threshold $threshold --negative-samples $NEGATIVE_SAMPLES --customer-only $CUSTOMER_ONLY --max-files $MAX_FILES | tee $LOG_FILE
+        python main.py --segment-length $seg_len --threshold $threshold --negative-samples $NEGATIVE_SAMPLES --max-files $MAX_FILES | tee $LOG_FILE
         
         # Extract key metrics for the summary
         TOTAL_FILES=$(grep "Total files processed:" $LOG_FILE | awk '{print $4}')
