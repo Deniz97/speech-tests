@@ -51,3 +51,7 @@ install_python_310:
 	apt update
 	sudo apt install python3.10 python3.10-venv python3.10-dev
 	
+install_ffmpeg:
+	sudo add-apt-repository ppa:jonathonf/ffmpeg-4
+	sudo apt update
+	sudo apt install ffmpeg
